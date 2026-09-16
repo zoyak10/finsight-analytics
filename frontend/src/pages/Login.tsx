@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Loader2, ArrowRight, Sparkles } from 'lucide-react';
+import { Eye, EyeOff, Loader2, ArrowRight, Sparkles, Film } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { useToast } from '../components/ui/Toast';
+import { useIntro } from '../hooks/useIntro';
 
 export function LoginPage() {
   const [email, setEmail] = useState('');
@@ -13,6 +14,7 @@ export function LoginPage() {
 
   const { login } = useAuth();
   const { addToast } = useToast();
+  const { playIntro } = useIntro();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -30,7 +32,11 @@ export function LoginPage() {
       addToast('success', 'Welcome to FinSight');
       navigate('/');
     } catch (err: any) {
-      const msg = err?.response?.data?.message || 'Invalid email or password';
+      const msg =
+        err?.response?.data?.message ||
+        (err?.message === 'Network Error' || !err?.response
+          ? 'Unable to connect to backend server. Please ensure the backend is running on port 5000.'
+          : 'Invalid email or password');
       setError(msg);
       addToast('error', msg);
     } finally {
@@ -67,9 +73,19 @@ export function LoginPage() {
 
           {/* Hero content */}
           <div className="max-w-lg">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-neon-cyan font-medium mb-6 backdrop-blur-sm">
-              <Sparkles className="w-3.5 h-3.5" />
-              Financial Analytics Platform
+            <div className="flex flex-wrap items-center gap-3 mb-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-neon-cyan font-medium backdrop-blur-sm">
+                <Sparkles className="w-3.5 h-3.5" />
+                Financial Analytics Platform
+              </div>
+              <button
+                type="button"
+                onClick={() => playIntro()}
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-500/20 hover:bg-brand-500/30 border border-brand-500/40 text-xs text-white font-medium backdrop-blur-sm shadow-glow-sm hover:shadow-glow transition-all active:scale-95"
+              >
+                <Film className="w-3.5 h-3.5 text-neon-cyan" />
+                <span>Watch Intro Clip</span>
+              </button>
             </div>
             <h1 className="text-5xl font-bold text-white leading-tight">
               Financial intelligence,
@@ -197,6 +213,15 @@ export function LoginPage() {
               <p className="text-xs text-surface-500 font-medium mb-1">Demo credentials</p>
               <p className="text-xs text-surface-400 font-mono">admin@finsight.com / admin123</p>
             </div>
+
+            <button
+              type="button"
+              onClick={() => playIntro()}
+              className="mt-4 w-full py-2.5 px-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-neon-cyan/40 text-xs font-medium text-surface-300 hover:text-white flex items-center justify-center gap-2 transition-all"
+            >
+              <Film className="w-3.5 h-3.5 text-neon-cyan" />
+              <span>Watch FinSight Intro Clip</span>
+            </button>
           </div>
         </div>
       </div>

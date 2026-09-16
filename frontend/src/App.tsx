@@ -3,6 +3,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 import { ThemeProvider } from './hooks/useTheme';
 import { ToastProvider } from './components/ui/Toast';
+import { IntroProvider } from './hooks/useIntro';
+import { IntroModal } from './components/intro/IntroModal';
 import { DashboardLayout } from './components/layout/DashboardLayout';
 import { LoginPage } from './pages/Login';
 import { DashboardPage } from './pages/Dashboard';
@@ -59,34 +61,37 @@ function App() {
   return (
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <ToastProvider>
-            <AuthProvider>
-              <Routes>
-                <Route
-                  path="/login"
-                  element={
-                    <PublicRoute>
-                      <LoginPage />
-                    </PublicRoute>
-                  }
-                />
-                <Route
-                  element={
-                    <ProtectedRoute>
-                      <DashboardLayout />
-                    </ProtectedRoute>
-                  }
-                >
-                  <Route path="/" element={<DashboardPage />} />
-                  <Route path="/transactions" element={<TransactionsPage />} />
-                  <Route path="/reports" element={<ReportsPage />} />
-                </Route>
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Routes>
-            </AuthProvider>
-          </ToastProvider>
-        </BrowserRouter>
+        <IntroProvider>
+          <IntroModal />
+          <BrowserRouter>
+            <ToastProvider>
+              <AuthProvider>
+                <Routes>
+                  <Route
+                    path="/login"
+                    element={
+                      <PublicRoute>
+                        <LoginPage />
+                      </PublicRoute>
+                    }
+                  />
+                  <Route
+                    element={
+                      <ProtectedRoute>
+                        <DashboardLayout />
+                      </ProtectedRoute>
+                    }
+                  >
+                    <Route path="/" element={<DashboardPage />} />
+                    <Route path="/transactions" element={<TransactionsPage />} />
+                    <Route path="/reports" element={<ReportsPage />} />
+                  </Route>
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+              </AuthProvider>
+            </ToastProvider>
+          </BrowserRouter>
+        </IntroProvider>
       </QueryClientProvider>
     </ThemeProvider>
   );

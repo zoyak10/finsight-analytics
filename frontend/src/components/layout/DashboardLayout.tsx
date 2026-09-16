@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { Outlet, Link } from 'react-router-dom';
-import { Menu, Sun, Moon } from 'lucide-react';
+import { Menu, Sun, Moon, Film } from 'lucide-react';
 import { Sidebar } from './Sidebar';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../hooks/useTheme';
+import { useIntro } from '../../hooks/useIntro';
 
 export function DashboardLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { user } = useAuth();
   const { isDark, toggleTheme } = useTheme();
+  const { playIntro } = useIntro();
 
   return (
     <div className="flex min-h-screen bg-surface-50 dark:bg-dark-300 transition-colors duration-300">
@@ -41,6 +43,14 @@ export function DashboardLayout() {
         </div>
 
         <div className="flex items-center gap-2">
+          <button
+            onClick={() => playIntro()}
+            className="p-2 rounded-xl text-brand-500 dark:text-neon-cyan hover:bg-surface-100 dark:hover:bg-dark-200/80 transition-colors"
+            aria-label="Watch Intro Video Clip"
+            title="Watch Intro"
+          >
+            <Film className="w-4 h-4" />
+          </button>
           <button
             onClick={toggleTheme}
             className="p-2 rounded-xl text-surface-600 dark:text-surface-300 hover:bg-surface-100 dark:hover:bg-dark-200/80 transition-colors"

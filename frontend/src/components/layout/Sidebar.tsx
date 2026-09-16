@@ -10,9 +10,11 @@ import {
   ChevronLeft,
   Sun,
   Moon,
+  Film,
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../hooks/useTheme';
+import { useIntro } from '../../hooks/useIntro';
 
 const NAV_ITEMS = [
   { to: '/', icon: LayoutDashboard, label: 'Overview' },
@@ -28,6 +30,7 @@ interface SidebarProps {
 export function Sidebar({ mobileOpen: externalMobileOpen, setMobileOpen: externalSetMobileOpen }: SidebarProps = {}) {
   const { user, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
+  const { playIntro } = useIntro();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const [internalMobileOpen, setInternalMobileOpen] = useState(false);
@@ -93,6 +96,33 @@ export function Sidebar({ mobileOpen: externalMobileOpen, setMobileOpen: externa
           ))}
         </ul>
       </nav>
+
+      {/* Intro Clip Replay Button */}
+      <div className="px-3 mb-1.5">
+        <button
+          onClick={() => {
+            playIntro();
+            setMobileOpen(false);
+          }}
+          className={`flex items-center gap-3 px-3 py-2.5 w-full rounded-xl text-sm font-medium transition-all duration-200 group
+            bg-gradient-to-r from-brand-500/10 via-neon-cyan/10 to-neon-violet/10 hover:from-brand-500/20 hover:via-neon-cyan/20 hover:to-neon-violet/20
+            border border-brand-500/20 hover:border-brand-500/40 text-brand-600 dark:text-neon-cyan
+            shadow-sm hover:shadow-glow-sm active:scale-98
+            ${collapsed && !mobileOpen ? 'justify-center' : ''}`}
+          aria-label="Watch Intro Video Clip"
+          title="Watch Cinematic Intro"
+        >
+          <Film className="w-5 h-5 flex-shrink-0 text-brand-500 dark:text-neon-cyan group-hover:scale-110 transition-transform" />
+          {(!collapsed || mobileOpen) && (
+            <div className="flex items-center justify-between flex-1 min-w-0">
+              <span className="font-semibold text-xs truncate">Watch Intro</span>
+              <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded-full bg-brand-500/20 text-brand-700 dark:text-neon-cyan border border-brand-500/30">
+                Clip
+              </span>
+            </div>
+          )}
+        </button>
+      </div>
 
       {/* Theme Toggle */}
       <div className="px-3 mb-2">
