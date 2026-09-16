@@ -5,6 +5,7 @@ import { ThemeProvider } from './hooks/useTheme';
 import { ToastProvider } from './components/ui/Toast';
 import { IntroProvider } from './hooks/useIntro';
 import { IntroModal } from './components/intro/IntroModal';
+import { DemoRecorder } from './components/ui/DemoRecorder';
 import { DashboardLayout } from './components/layout/DashboardLayout';
 import { LoginPage } from './pages/Login';
 import { DashboardPage } from './pages/Dashboard';
@@ -63,6 +64,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <IntroProvider>
           <IntroModal />
+          <DemoRecorder />
           <BrowserRouter>
             <ToastProvider>
               <AuthProvider>
