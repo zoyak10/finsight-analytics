@@ -1,0 +1,342 @@
+{
+  "info": {
+    "_postman_id": "finsight-analytics-collection-2024",
+    "name": "FinSight Financial Analytics API",
+    "description": "Comprehensive Postman collection for FinSight — Financial Analytics & Transaction Intelligence Dashboard.\nIncludes Authentication, Dashboard Analytics, Transaction Intelligence, and Configurable CSV Reports.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "Login (Admin Analyst)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var json = pm.response.json();",
+                  "    if (json.data && json.data.token) {",
+                  "        pm.collectionVariables.set('token', json.data.token);",
+                  "        pm.test('Token saved to collection variable', function() {",
+                  "            pm.expect(json.data.token).to.be.a('string');",
+                  "        });",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@finsight.com\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Authenticates the demo administrator/analyst and automatically stores the returned JWT token in the collection variable for subsequent requests."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current User Profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            },
+            "description": "Fetches profile information for the authenticated user using JWT token."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Dashboard Analytics",
+      "item": [
+        {
+          "name": "Get KPI Summary",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/summary",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "summary"]
+            },
+            "description": "Returns aggregate financial KPIs: Total Volume, Transaction Count, Average Transaction Size, and Success Rate."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Monthly Revenue vs Expense Trends",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/trends",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "trends"]
+            },
+            "description": "Returns monthly aggregated revenue and expense trends used in the interactive line/area charts."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Category Breakdown",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "categories"]
+            },
+            "description": "Returns category distribution values and percentage shares for doughnut chart visualization."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Transactions Intelligence",
+      "item": [
+        {
+          "name": "Get All Transactions (Paginated & Filtered)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/transactions?page=1&limit=10&sortBy=date&sortOrder=desc",
+              "host": ["{{baseUrl}}"],
+              "path": ["transactions"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "date"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc"
+                },
+                {
+                  "key": "category",
+                  "value": "Software",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "Paid",
+                  "disabled": true
+                },
+                {
+                  "key": "search",
+                  "value": "104",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Retrieves transactions with dynamic multi-field filtering, real-time search, sorting, and pagination."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Distinct Users List",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/transactions/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["transactions", "users"]
+            },
+            "description": "Fetches a list of unique user IDs and profiles for filter dropdowns."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Transaction by ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/transactions/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["transactions", "1"]
+            },
+            "description": "Fetches complete forensic details for an individual transaction."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Reports & CSV Export",
+      "item": [
+        {
+          "name": "Get Export Data Preview",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reports/preview",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports", "preview"]
+            },
+            "description": "Provides a quick preview of available export records."
+          },
+          "response": []
+        },
+        {
+          "name": "Export Configurable CSV",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"columns\": [\n    \"id\",\n    \"date\",\n    \"amount\",\n    \"category\",\n    \"status\",\n    \"user_id\",\n    \"user_profile\"\n  ],\n  \"filters\": {\n    \"category\": \"Software\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reports/export",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports", "export"]
+            },
+            "description": "Generates and streams a custom CSV file with user-configured columns and active filters."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
