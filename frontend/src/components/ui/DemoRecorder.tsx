@@ -10,7 +10,14 @@ export function DemoRecorder() {
   const streamRef = useRef<MediaStream | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<any>(null);
-  const { addToast } = useToast();
+  
+  let addToast = (_type: any, _msg: string) => {};
+  try {
+    const toast = useToast();
+    if (toast?.addToast) addToast = toast.addToast;
+  } catch {
+    // Graceful fallback if toast provider not available
+  }
 
   const startRecording = async () => {
     try {

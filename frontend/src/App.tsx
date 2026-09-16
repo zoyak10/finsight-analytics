@@ -61,12 +61,12 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 function App() {
   return (
     <ThemeProvider>
-      <QueryClientProvider client={queryClient}>
-        <IntroProvider>
-          <IntroModal />
-          <DemoRecorder />
-          <BrowserRouter>
-            <ToastProvider>
+      <ToastProvider>
+        <QueryClientProvider client={queryClient}>
+          <IntroProvider>
+            <IntroModal />
+            <DemoRecorder />
+            <BrowserRouter>
               <AuthProvider>
                 <Routes>
                   <Route
@@ -91,10 +91,10 @@ function App() {
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               </AuthProvider>
-            </ToastProvider>
-          </BrowserRouter>
-        </IntroProvider>
-      </QueryClientProvider>
+            </BrowserRouter>
+          </IntroProvider>
+        </QueryClientProvider>
+      </ToastProvider>
     </ThemeProvider>
   );
 }
